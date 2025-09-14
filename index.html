@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CudaSlayer — Notes on DL, Math, Physics</title>
+    <meta name="description" content="Minimal technical blog on deep learning, heavy maths, and physics." />
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+      (function(){
+        try{
+          var k='blog:theme';
+          var t=localStorage.getItem(k);
+          if(t!=='dark' && t!=='light') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', t);
+        }catch(e){}
+      })();
+    </script>
+    <link rel="stylesheet" href="assets/styles.css" />
+    <!-- KaTeX for math rendering (CSS first to prevent FOUC) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- React from CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Minimal markdown parser -->
+    <script src="https://unpkg.com/marked@12.0.2/marked.min.js" crossorigin></script>
+    <!-- Syntax highlighting (full build to ensure languages like Python) -->
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+    <!-- KaTeX core + auto-render for $..$ $$..$$ -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+
+    <script type="module" src="assets/app.js"></script>
+  </body>
+  </html>

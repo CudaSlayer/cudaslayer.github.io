@@ -1,0 +1,28 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+
+# Local server artifacts
+.server.pid
+.server.log
+
+# Dependency caches (not used, but safe to ignore)
+node_modules/
+dist/
+build/
+.parcel-cache/
+.cache/
+
+# Env / local config
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

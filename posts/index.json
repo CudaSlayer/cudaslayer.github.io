@@ -1,0 +1,10 @@
+[
+  {
+    "slug": "hello-world",
+    "title": "Hello, World — Why Another Blog?",
+    "date": "2025-09-15",
+    "tags": ["meta", "intro"],
+    "summary": "A quick note on intent: deep learning notes, math, and physics.",
+    "file": "posts/hello-world.md"
+  }
+]
