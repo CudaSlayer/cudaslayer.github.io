@@ -14,6 +14,11 @@ function getInitialTheme() {
 function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem(THEME_KEY, theme);
+  try {
+    const light = document.getElementById('hljs-light');
+    const dark = document.getElementById('hljs-dark');
+    if (light && dark) { light.disabled = (theme !== 'light'); dark.disabled = (theme !== 'dark'); }
+  } catch (_) {}
 }
 
 function formatDate(iso) {
@@ -141,6 +146,8 @@ function PostView({ meta }) {
             renderMathIn(el);
             try {
               if (window.hljs) {
+                // Broad pass first
+                if (window.hljs.highlightAll) window.hljs.highlightAll();
                 el.querySelectorAll('pre code').forEach((block) => {
                   // If marked didn't already highlight, do it now
                   if (!block.classList.contains('hljs')) {
