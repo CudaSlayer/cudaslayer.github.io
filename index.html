@@ -1,41 +1,70 @@
-<!doctype html>
-<html lang="en">
+<!--
+  CudaSlayer — Minimal Blog
+  This single HTML file bootstraps the entire site. It pulls in:
+  - A monospace UI font (JetBrains Mono)
+  - A small CSS file with light/dark theme variables
+  - React + ReactDOM from a CDN (for UI)
+  - Marked (for parsing Markdown posts)
+  - highlight.js (for code syntax highlighting)
+  - KaTeX (for rendering LaTeX math)
+  The actual app logic lives in assets/app.js
+-->
+<!doctype html> <!-- Standard HTML5 doctype to ensure modern rendering mode -->
+<html lang="en"> <!-- Page language for accessibility and search engines -->
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CudaSlayer — Notes on DL, Math, Physics</title>
-    <meta name="description" content="Minimal technical blog on deep learning, heavy maths, and physics." />
+    <meta charset="utf-8" /> <!-- Use UTF-8 so all characters display correctly -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- Make layout responsive on mobile -->
+    <title>CudaSlayer — Notes on DL, Math, Physics</title> <!-- Browser tab title -->
+    <meta name="description" content="Minimal technical blog on deep learning, heavy maths, and physics." /> <!-- Short site description -->
+
+    <!-- Performance: preconnect to CDNs we’ll load from -->
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- UI font: JetBrains Mono (used for both body and code) -->
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!--
+      Before loading CSS, set the theme attribute on <html>.
+      This avoids a flash of wrong theme (FOUC) on first paint.
+    -->
     <script>
       (function(){
         try{
-          var k='blog:theme';
-          var t=localStorage.getItem(k);
+          var k='blog:theme'; // localStorage key where we store theme
+          var t=localStorage.getItem(k); // try to read previously chosen theme
+          // If no explicit theme, respect the OS color scheme
           if(t!=='dark' && t!=='light') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', t);
+          document.documentElement.setAttribute('data-theme', t); // apply the theme to <html>
         }catch(e){}
       })();
     </script>
+
+    <!-- Our site styles (colors, spacing, components) -->
     <link rel="stylesheet" href="assets/styles.css" />
-    <!-- KaTeX for math rendering (CSS first to prevent FOUC) -->
+
+    <!-- KaTeX stylesheet so math renders without layout shifting -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   </head>
   <body>
+    <!-- React will render our app into this root element -->
     <div id="root"></div>
 
-    <!-- React from CDN -->
+    <!-- React runtime from CDN (UI library) -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <!-- ReactDOM to connect React to the DOM -->
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <!-- Minimal markdown parser -->
+    <!-- Marked parses Markdown strings into HTML -->
     <script src="https://unpkg.com/marked@12.0.2/marked.min.js" crossorigin></script>
-    <!-- Built-in lightweight highlighter is implemented in assets/app.js -->
-    <!-- KaTeX core + auto-render for $..$ $$..$$ -->
+    <!-- highlight.js colors code blocks inside posts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+    <!-- KaTeX core + auto-render add LaTeX math rendering (inline $..$ and block $$..$$) -->
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
 
+    <!-- Our app code (routing, theme toggle, post loading) -->
     <script type="module" src="assets/app.js"></script>
   </body>
   </html>

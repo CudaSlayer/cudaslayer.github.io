@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Simple network sketch; uses currentColor for theme-friendly stroke -->
+<svg width="640" height="220" viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tiny feedforward network diagram">
+  <defs>
+    <style>
+      .n { fill: none; stroke: currentColor; stroke-width: 2; }
+      .t { fill: currentColor; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+      .e { stroke: currentColor; stroke-width: 1.2; opacity: 0.8; }
+    </style>
+  </defs>
+  <!-- Input layer (x) -->
+  <circle class="n" cx="80" cy="50" r="14"/>
+  <circle class="n" cx="80" cy="110" r="14"/>
+  <circle class="n" cx="80" cy="170" r="14"/>
+  <text class="t" x="60" y="20">x</text>
+  <!-- Hidden layer h -->
+  <circle class="n" cx="280" cy="30" r="14"/>
+  <circle class="n" cx="280" cy="70" r="14"/>
+  <circle class="n" cx="280" cy="110" r="14"/>
+  <circle class="n" cx="280" cy="150" r="14"/>
+  <circle class="n" cx="280" cy="190" r="14"/>
+  <text class="t" x="262" y="20">h=σ(Wx+b)</text>
+  <!-- Output layer y_hat -->
+  <circle class="n" cx="520" cy="110" r="14"/>
+  <text class="t" x="500" y="20">ŷ</text>
+
+  <!-- Edges: inputs to hidden -->
+  <g class="e">
+    <line x1="94" y1="50" x2="266" y2="30"/>
+    <line x1="94" y1="50" x2="266" y2="70"/>
+    <line x1="94" y1="50" x2="266" y2="110"/>
+    <line x1="94" y1="50" x2="266" y2="150"/>
+    <line x1="94" y1="50" x2="266" y2="190"/>
+
+    <line x1="94" y1="110" x2="266" y2="30"/>
+    <line x1="94" y1="110" x2="266" y2="70"/>
+    <line x1="94" y1="110" x2="266" y2="110"/>
+    <line x1="94" y1="110" x2="266" y2="150"/>
+    <line x1="94" y1="110" x2="266" y2="190"/>
+
+    <line x1="94" y1="170" x2="266" y2="30"/>
+    <line x1="94" y1="170" x2="266" y2="70"/>
+    <line x1="94" y1="170" x2="266" y2="110"/>
+    <line x1="94" y1="170" x2="266" y2="150"/>
+    <line x1="94" y1="170" x2="266" y2="190"/>
+  </g>
+
+  <!-- Edges: hidden to output -->
+  <g class="e">
+    <line x1="294" y1="30" x2="506" y2="110"/>
+    <line x1="294" y1="70" x2="506" y2="110"/>
+    <line x1="294" y1="110" x2="506" y2="110"/>
+    <line x1="294" y1="150" x2="506" y2="110"/>
+    <line x1="294" y1="190" x2="506" y2="110"/>
+  </g>
+
+  <!-- Labels for parameters (lightweight) -->
+  <text class="t" x="160" y="210">W,b</text>
+  <text class="t" x="400" y="210">W,b</text>
+</svg>

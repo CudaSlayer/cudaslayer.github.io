@@ -6,5 +6,13 @@
     "tags": ["meta", "intro"],
     "summary": "A quick note on intent: deep learning notes, math, and physics.",
     "file": "posts/hello-world.md"
+  },
+  {
+    "slug": "dl-math-foundations",
+    "title": "Deep Learning: Mathematical Foundations (A Gentle Start)",
+    "date": "2025-09-15",
+    "tags": ["deep-learning", "math", "foundations"],
+    "summary": "Vectors, linear models, loss, gradients, chain rule, backprop, and optimization — with a tiny diagram.",
+    "file": "posts/dl-math-foundations.md"
   }
 ]

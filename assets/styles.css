@@ -19,6 +19,7 @@ html[data-theme="dark"] {
   --code: #a6e3a1;     /* green */
   --danger: #f38ba8;   /* red */
   --warn: #f9e2af;     /* yellow */
+  --math: #b4befe;     /* soft lavender for equations */
   color-scheme: dark;
 }
 
@@ -35,6 +36,7 @@ html[data-theme="light"] {
   --code: #16a34a;     /* green for code text */
   --danger: #ff4d6d;   /* danger */
   --warn: #f59e0b;     /* warning */
+  --math: #7c5cff;     /* rich indigo for equations */
   color-scheme: light;
 }
 
@@ -134,8 +136,8 @@ a:hover { text-decoration: underline; }
 }
 .content img { max-width: 100%; border-radius: 8px; }
 
-/* Ensure KaTeX picks up theme colors */
-.katex, .katex-display { color: var(--text); }
+/* Equations: distinct color per theme via --math */
+.katex, .katex-display { color: var(--math); }
 .katex-display { margin: 1.1em 0; padding: 0.2em 0.1em; }
 .content .katex-display > .katex { overflow-x: auto; overflow-y: hidden; display: block; }
 
