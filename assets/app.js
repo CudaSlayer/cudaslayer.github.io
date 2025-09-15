@@ -131,6 +131,8 @@ function renderMathIn(el) {
 
 function PostView({ meta }) {
   const [html, setHtml] = useState('<p>Loading…</p>');
+  const [toc, setToc] = useState([]);
+  const [activeId, setActiveId] = useState('');
   useEffect(() => {
     let active = true;
     (async () => {
@@ -157,6 +159,23 @@ function PostView({ meta }) {
                 });
               }
             } catch (_) {}
+            // Build table of contents from headings
+            try {
+              const headings = Array.from(el.querySelectorAll('h1, h2, h3'));
+              const slug = (s) => s.toLowerCase().trim()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+              const items = [];
+              headings.forEach(h => {
+                const level = h.tagName.toLowerCase();
+                const text = h.textContent || '';
+                if (!h.id) h.id = slug(text);
+                if (level === 'h2' || level === 'h3') items.push({ id: h.id, text, level });
+              });
+              setToc(items);
+              if (items.length && !activeId) setActiveId(items[0].id);
+            } catch (_) {}
           }
         }, 0);
       } catch (e) {
@@ -166,10 +185,43 @@ function PostView({ meta }) {
     return () => { active = false; };
   }, [meta.file]);
 
-  return React.createElement('article', { className: 'post' },
-    React.createElement('h1', null, meta.title),
-    React.createElement('div', { className: 'meta' }, `${formatDate(meta.date)} · ${meta.tags?.join(', ') || ''}`),
-    React.createElement('div', { id: 'post-content', className: 'content', dangerouslySetInnerHTML: { __html: html } })
+  return (
+    React.createElement('div', { className: 'post-layout' },
+      React.createElement('aside', { className: 'toc' },
+        React.createElement('div', { className: 'toc-inner' },
+          React.createElement('div', { className: 'toc-title' }, 'Contents'),
+          toc.length === 0 ? React.createElement('div', { className: 'toc-empty' }, '—') :
+          React.createElement('nav', null,
+            React.createElement('ul', { className: 'toc-list' },
+              toc.map(item => (
+                React.createElement('li', {
+                  key: item.id,
+                  className: 'toc-li ' + (item.level === 'h3' ? 'toc-depth-2' : 'toc-depth-1')
+                },
+                  React.createElement('a', {
+                    className: 'toc-link ' + (item.level === 'h3' ? 'toc-depth-2' : 'toc-depth-1') + (activeId === item.id ? ' active' : ''),
+                    href: `#/post/${meta.slug}`,
+                    onClick: (e) => {
+                      e.preventDefault();
+                      const section = document.getElementById(item.id);
+                      if (section) {
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        setActiveId(item.id);
+                      }
+                    }
+                  }, item.text.replace(/^\s*\d+[\).\:-]?\s*/, ''))
+                )
+              ))
+            )
+          )
+        )
+      ),
+      React.createElement('article', { className: 'post' },
+        React.createElement('h1', null, meta.title),
+        React.createElement('div', { className: 'meta' }, `${formatDate(meta.date)} · ${meta.tags?.join(', ') || ''}`),
+        React.createElement('div', { id: 'post-content', className: 'content', dangerouslySetInnerHTML: { __html: html } })
+      )
+    )
   );
 }
 
