@@ -1,5 +1,3 @@
-# Matrix Multiplication, Affine Maps, and Matrix Calculus (For Everyone)
-
 > Goal: Understand how matrices multiply, how affine transformations act on points, and how to differentiate matrix expressions — with proper mathematical notation that still feels approachable.
 
 ## 1) Vectors, Matrices, and Shapes

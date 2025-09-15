@@ -41,6 +41,20 @@
       })();
     </script>
 
+    <!-- Tailwind CSS via CDN for responsive utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['JetBrains Mono','ui-monospace','SFMono-Regular','Menlo','Monaco','Consolas','Liberation Mono','Courier New','monospace'],
+              mono: ['JetBrains Mono','ui-monospace','SFMono-Regular','Menlo','Monaco','Consolas','Liberation Mono','Courier New','monospace']
+            }
+          }
+        }
+      };
+    </script>
     <!-- Our site styles (colors, spacing, components) -->
     <link rel="stylesheet" href="assets/styles.css" />
 
@@ -51,16 +65,16 @@
     <!-- React will render our app into this root element -->
     <div id="root"></div>
 
-    <!-- React runtime from CDN (UI library) -->
+    <!-- React runtime from CDN (UI library). React handles the UI as a tree of components. -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <!-- ReactDOM to connect React to the DOM -->
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <!-- Marked parses Markdown strings into HTML -->
+    <!-- Marked parses Markdown strings into HTML (we render posts with this). -->
     <script src="https://unpkg.com/marked@12.0.2/marked.min.js" crossorigin></script>
-    <!-- highlight.js colors code blocks inside posts -->
+    <!-- highlight.js colors code blocks inside posts (if it loads successfully). -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 
-    <!-- KaTeX core + auto-render add LaTeX math rendering (inline $..$ and block $$..$$) -->
+    <!-- KaTeX core + auto-render add LaTeX math rendering (inline $..$ and block $$..$$). -->
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
 

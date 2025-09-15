@@ -1,4 +1,14 @@
-/* Minimal, dependency-free styling with theme variables */
+/*
+  Theme + Layout CSS
+  ==================
+  This stylesheet defines:
+  - CSS variables for colors (two themes via html[data-theme])
+  - Base layout primitives (container, header, main, footer)
+  - Content styling (typography, code blocks, math blocks)
+  - Post layout (two-column with ToC on larger screens)
+  - Responsive tweaks for small screens
+*/
+/* Global tokens (spacing, radii, fonts) */
 :root {
   --radius: 10px;
   --line: 1.7;
@@ -7,6 +17,7 @@
 }
 
 /* Catppuccin Mocha (dark) */
+/* Dark theme derived from Catppuccin Mocha */
 html[data-theme="dark"] {
   --bg: #1e1e2e;       /* base */
   --bg-soft: #181825;  /* mantle */
@@ -24,6 +35,7 @@ html[data-theme="dark"] {
 }
 
 /* AnuPpuccin-inspired Light */
+/* Light theme inspired by AnuPpuccin (sand‑cream background) */
 html[data-theme="light"] {
   --bg: #F7F0A1;       /* sand cream canvas */
   --bg-soft: #FFF7EB;  /* subtle lighter top */
@@ -40,22 +52,28 @@ html[data-theme="light"] {
   color-scheme: light;
 }
 
+/* Make layout sizing predictable */
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
+html { -webkit-text-size-adjust: 100%; }
+/* Base text and background */
 body {
   margin: 0;
   font-family: var(--font-body);
   line-height: var(--line);
+  font-size: clamp(15px, 1.6vw + 0.25rem, 18px);
   background: linear-gradient(180deg, var(--bg-soft), var(--bg)) fixed;
   color: var(--text);
 }
 
+/* App container (now full-width; padding handles breathing room) */
 .container {
   max-width: 860px;
   margin: 0 auto;
   padding: 24px 16px 56px;
 }
 
+/* Sticky header with subtle blur and bottom border */
 header.site {
   position: sticky;
   top: 0;
@@ -65,12 +83,13 @@ header.site {
   border-bottom: 1px solid color-mix(in lab, var(--panel) 60%, transparent);
 }
 
+/* Header inner: horizontally arranges brand + controls */
 .site-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  max-width: 980px;
+  max-width: 860px;
   margin: 0 auto;
   padding: 12px 16px;
 }
@@ -87,7 +106,7 @@ header.site {
   background: radial-gradient(circle at 30% 30%, var(--accent), var(--link));
   box-shadow: 0 0 16px color-mix(in lab, var(--accent) 40%, transparent);
 }
-.brand h1 { font-size: 22px; margin: 0; font-weight: 700; letter-spacing: .2px; line-height: 1.2; white-space: nowrap; }
+.brand h1 { font-size: clamp(18px, 2vw + 0.6rem, 24px); margin: 0; font-weight: 700; letter-spacing: .2px; line-height: 1.2; white-space: nowrap; }
 
 .toolbar { display: flex; align-items: center; gap: 8px; }
 button.kbd {
@@ -102,11 +121,12 @@ button.kbd {
 button.kbd:hover { filter: brightness(1.05); }
 
 main {
-  max-width: 980px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 16px;
 }
 
+/* Reusable elevated card surface for list items and notices */
 .card {
   background: color-mix(in lab, var(--panel) 75%, transparent);
   border: 1px solid color-mix(in lab, var(--muted) 35%, transparent);
@@ -115,34 +135,42 @@ main {
 }
 
 .post-list { display: grid; gap: 14px; }
-.post-item h2 { margin: 0 0 6px; font-size: 20px; }
+.post-item h2 { margin: 0 0 6px; font-size: clamp(18px, 1.8vw + 0.6rem, 22px); }
 .post-item p { margin: 0; color: var(--subtle); }
 .meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
 
 a { color: var(--link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-.content { font-size: 17px; }
+/* Article content typography and spacing */
+.content { font-size: clamp(16px, 1.2vw + 0.8rem, 18px); }
 .content h1,.content h2,.content h3 { margin-top: 1.6em; }
 .content h1,.content h2,.content h3 { scroll-margin-top: 72px; }
+.content h1 { font-size: clamp(24px, 3.2vw + 0.5rem, 36px); }
+.content h2 { font-size: clamp(20px, 2.4vw + 0.4rem, 28px); }
+.content h3 { font-size: clamp(18px, 1.8vw + 0.3rem, 22px); }
 .content pre, .content code {
   font-family: var(--font-mono);
   background: color-mix(in lab, var(--panel) 85%, transparent);
   color: var(--text);
 }
-.content pre { padding: 12px; border-radius: 8px; overflow: auto; border: 1px solid color-mix(in lab, var(--muted) 25%, transparent); }
+.content pre { padding: 12px; border-radius: 8px; overflow: auto; border: 1px solid color-mix(in lab, var(--muted) 25%, transparent); max-width: 100%; }
 .content blockquote {
   margin: 0; padding: 8px 14px; border-left: 3px solid var(--accent);
   background: color-mix(in lab, var(--panel) 85%, transparent);
 }
-.content img { max-width: 100%; border-radius: 8px; }
+.content img { max-width: 100%; border-radius: 8px; height: auto; }
+.content table { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; }
+.content th, .content td { padding: 4px 8px; }
 
 /* Equations: distinct color per theme via --math */
+/* Math inherits themed color token so it stands out slightly */
 .katex, .katex-display { color: var(--math); }
-.katex-display { margin: 1.1em 0; padding: 0.2em 0.1em; }
+.katex-display { margin: 1.1em 0; padding: 0.2em 0.1em; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .content .katex-display > .katex { overflow-x: auto; overflow-y: hidden; display: block; }
 
 /* Highlight.js theme tuned to site variables */
+/* Syntax highlight tokens using site colors */
 pre code.hljs { display: block; padding: 12px; border-radius: 8px; }
 code.hljs { background: color-mix(in lab, var(--panel) 85%, transparent); color: var(--text); }
 .hljs-comment, .hljs-quote { color: var(--muted); font-style: italic; }
@@ -164,7 +192,6 @@ code.hljs { background: color-mix(in lab, var(--panel) 85%, transparent); color:
 /* Post layout with left TOC */
 .post-layout {
   display: grid;
-  grid-template-columns: 240px 1fr;
   gap: 24px;
 }
 
@@ -202,3 +229,20 @@ footer.site {
 }
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+
+@media (max-width: 640px) {
+  .container { padding: 16px 12px 40px; }
+  .site-inner { padding: 10px 12px; }
+  main { padding: 12px; }
+}
+
+/* Ensure outer gutters (left+right) >= content width on wide screens.
+   That requires content width <= 33.33% of viewport (each gutter >= content/2).
+   Apply to header inner, main container, and footer width. */
+@media (min-width: 1200px) {
+  .container,
+  .site-inner,
+  footer.site {
+    max-width: 33.3333vw;
+  }
+}

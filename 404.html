@@ -1,11 +1,19 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!--
+      This fallback page redirects unknown paths back to the SPA entry.
+      On GitHub Pages, direct navigation to /post/slug would otherwise 404
+      because there is no server-side route. The hash router (#/...) lives
+      in index.html, so we send users there immediately.
+    -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Not Found — Redirecting…</title>
     <meta http-equiv="refresh" content="0;url=/#/" />
     <style>
+      /* Minimal styling so the page looks decent for the split second
+         it may be visible before redirect happens. */
       html,body{height:100%}body{margin:0;display:grid;place-items:center;background:#0b0b0f;color:#cdd6f4;font:16px ui-sans-serif,system-ui}
       a{color:#89b4fa}
     </style>
@@ -17,4 +25,3 @@
     </div>
   </body>
   </html>
-

@@ -67,14 +67,14 @@ if (window.marked) {
 // --- Components ---
 function Header({ theme, onToggle }) {
   return (
-    React.createElement('header', { className: 'site' },
-      React.createElement('div', { className: 'site-inner' },
-        React.createElement('a', { className: 'brand', href: '#/' },
-          React.createElement('span', { className: 'dot', 'aria-hidden': true }),
-          React.createElement('h1', null, 'CudaSlayer — Notes')
+    React.createElement('header', { className: 'site backdrop-blur' },
+      React.createElement('div', { className: 'site-inner max-w-5xl mx-auto flex items-center justify-between gap-4 px-4 py-3 sm:px-6' },
+        React.createElement('a', { className: 'brand flex items-center gap-3 no-underline', href: '#/' },
+          React.createElement('span', { className: 'dot w-2.5 h-2.5 rounded-full', 'aria-hidden': true }),
+          React.createElement('h1', { className: 'truncate' }, 'CudaSlayer — Notes')
         ),
         React.createElement('div', { className: 'toolbar' },
-          React.createElement('button', { className: 'kbd', onClick: onToggle, title: 'Toggle theme' }, theme === 'dark' ? '☾ Dark' : '☀ Light')
+          React.createElement('button', { className: 'kbd rounded-full border px-3 py-1 text-sm', onClick: onToggle, title: 'Toggle theme' }, theme === 'dark' ? '☾ Dark' : '☀ Light')
         )
       )
     )
@@ -90,9 +90,9 @@ function Footer() {
 }
 
 function PostList({ posts }) {
-  return React.createElement('div', { className: 'post-list' },
+  return React.createElement('div', { className: 'post-list grid gap-3' },
     posts.map(p => (
-      React.createElement('article', { key: p.slug, className: 'post-item card' },
+      React.createElement('article', { key: p.slug, className: 'post-item card p-4 rounded-lg' },
         React.createElement('h2', null, React.createElement('a', { href: `#/post/${p.slug}` }, p.title)),
         React.createElement('div', { className: 'meta' }, `${formatDate(p.date)} · ${p.tags?.join(', ') || ''}`),
         p.summary ? React.createElement('p', null, p.summary) : null
@@ -188,8 +188,8 @@ function PostView({ meta }) {
   }, [meta.file]);
 
   return (
-    React.createElement('div', { className: 'post-layout' },
-      React.createElement('aside', { className: 'toc' },
+    React.createElement('div', { className: 'post-layout grid gap-6 md:grid-cols-12' },
+      React.createElement('aside', { className: 'toc hidden md:block md:col-span-3 lg:col-span-3' },
         React.createElement('div', { className: 'toc-inner' },
           React.createElement('div', { className: 'toc-title' }, 'Contents'),
           toc.length === 0 ? React.createElement('div', { className: 'toc-empty' }, '—') :
@@ -218,7 +218,7 @@ function PostView({ meta }) {
           )
         )
       ),
-      React.createElement('article', { className: 'post' },
+      React.createElement('article', { className: 'post md:col-span-9' },
         React.createElement('h1', null, meta.title),
         React.createElement('div', { className: 'meta' }, `${formatDate(meta.date)} · ${meta.tags?.join(', ') || ''}`),
         React.createElement('div', { id: 'post-content', className: 'content', dangerouslySetInnerHTML: { __html: html } })
@@ -270,8 +270,8 @@ function App() {
   return (
     React.createElement(React.Fragment, null,
       React.createElement(Header, { theme, onToggle: onToggleTheme }),
-      React.createElement('main', null,
-        React.createElement('div', { className: 'container' },
+      React.createElement('main', { className: 'px-4 sm:px-6' },
+        React.createElement('div', { className: 'container max-w-5xl mx-auto' },
           !ready && React.createElement('div', { className: 'card' }, 'Loading…'),
           ready && view.name === 'home' && React.createElement(PostList, { posts }),
           ready && view.name === 'post' && (() => {
