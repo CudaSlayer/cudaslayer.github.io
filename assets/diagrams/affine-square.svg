@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="360" height="220" viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Affine transform of a square">
+  <defs>
+    <style>
+      .axis { stroke: currentColor; stroke-width: 1; opacity: 0.5 }
+      .grid { stroke: currentColor; stroke-width: 0.5; opacity: 0.2 }
+      .sq { fill: none; stroke: currentColor; stroke-width: 2 }
+      .orig { opacity: 0.7 }
+      .trans { opacity: 1 }
+      .lbl { fill: currentColor; font-family: 'JetBrains Mono', monospace; font-size: 11px }
+    </style>
+  </defs>
+  <!-- axes -->
+  <line class="axis" x1="20" y1="200" x2="340" y2="200"/>
+  <line class="axis" x1="20" y1="200" x2="20" y2="20"/>
+  <!-- grid -->
+  <g class="grid">
+    <path d="M60 200V20 M100 200V20 M140 200V20 M180 200V20 M220 200V20 M260 200V20 M300 200V20"/>
+    <path d="M20 160H340 M20 120H340 M20 80H340 M20 40H340"/>
+  </g>
+  <text class="lbl" x="5" y="15">y</text>
+  <text class="lbl" x="342" y="205">x</text>
+  <!-- original unit square (0,0)-(1,1) scaled by 40 and shifted to grid origin -->
+  <polygon class="sq orig" points="20,200 60,200 60,160 20,160"/>
+  <text class="lbl" x="25" y="155">original</text>
+  <!-- transformed: shear A=[[1,0.5],[0,1]] then shift b=(40,-40) -->
+  <!-- vertices: (0,0)->(40,-40); (1,0)->(80,-40); (1,1)->(120,-80); (0,1)->(60,-80) relative to origin (20,200) -->
+  <polygon class="sq trans" points="60,160 100,160 140,120 100,120"/>
+  <text class="lbl" x="102" y="116">A·x + b</text>
+  
+</svg>

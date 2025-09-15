@@ -122,6 +122,8 @@ function renderMathIn(el) {
         { left: '\\[', right: '\\]', display: true }
       ],
       throwOnError: false,
+      strict: false,
+      processEnvironments: true,
       ignoredTags: ['script','noscript','style','textarea','pre','code']
     });
   } catch (e) {

@@ -25,7 +25,7 @@ html[data-theme="dark"] {
 
 /* AnuPpuccin-inspired Light */
 html[data-theme="light"] {
-  --bg: #FAF3E0;       /* sand cream canvas */
+  --bg: #F7F0A1;       /* sand cream canvas */
   --bg-soft: #FFF7EB;  /* subtle lighter top */
   --panel: #e6e9f2;    /* cards/panels */
   --muted: #8a8fa3;    /* meta text */
