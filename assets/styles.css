@@ -246,3 +246,333 @@ footer.site {
     max-width: 33.3333vw;
   }
 }
+
+/* Triton widget (interactive article visuals) */
+.triton-widget { margin: 32px 0; }
+.triton {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw + 12px, 28px);
+  padding: clamp(18px, 2vw + 14px, 32px);
+  border-radius: var(--radius);
+  background: color-mix(in lab, var(--panel) 75%, transparent);
+  border: 1px solid color-mix(in lab, var(--muted) 30%, transparent);
+  box-shadow: 0 12px 28px color-mix(in lab, var(--bg-soft) 25%, transparent);
+}
+.triton-title {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(20px, 2vw + 0.6rem, 28px);
+  color: var(--subtle);
+}
+.triton-lead {
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
+}
+.triton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(14px, 1.4vw + 10px, 24px);
+  border-radius: calc(var(--radius) - 2px);
+  background: color-mix(in lab, var(--bg) 90%, transparent);
+  border: 1px solid color-mix(in lab, var(--muted) 28%, transparent);
+}
+.triton-subtitle {
+  margin: 0;
+  font-size: clamp(16px, 1.6vw + 0.4rem, 22px);
+  color: var(--subtle);
+}
+.triton-note,
+.triton-footnote {
+  margin: 0;
+  font-size: 0.9em;
+  color: var(--muted);
+}
+.triton-array { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.triton-array-label { font-family: var(--font-mono); font-weight: 700; color: var(--subtle); min-width: 2.5rem; }
+.triton-array-cells { display: flex; gap: 8px; flex-wrap: wrap; }
+.triton-cell {
+  min-width: 46px;
+  min-height: 46px;
+  padding: 6px 0;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in lab, var(--muted) 35%, transparent);
+  background: color-mix(in lab, var(--panel) 80%, transparent);
+  color: var(--text);
+}
+.triton-cell--x {
+  background: color-mix(in lab, var(--link) 22%, var(--panel));
+  border-color: color-mix(in lab, var(--link) 60%, transparent);
+  color: color-mix(in lab, var(--link) 75%, white);
+}
+.triton-cell--y {
+  background: color-mix(in lab, var(--accent) 22%, var(--panel));
+  border-color: color-mix(in lab, var(--accent) 60%, transparent);
+  color: color-mix(in lab, var(--accent) 75%, white);
+}
+.triton-cell--z {
+  background: color-mix(in lab, var(--math) 22%, var(--panel));
+  border-color: color-mix(in lab, var(--math) 58%, transparent);
+  color: color-mix(in lab, var(--math) 80%, white);
+}
+.triton-cell--mask {
+  background: color-mix(in lab, var(--panel) 90%, transparent);
+  color: var(--subtle);
+  border-style: dashed;
+}
+.triton-cell--masked {
+  opacity: 0.55;
+  color: color-mix(in lab, var(--muted) 70%, transparent);
+  border-style: dashed;
+}
+.triton-block-grid,
+.triton-program-grid,
+.triton-summary-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+.triton-block,
+.triton-program {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: calc(var(--radius) - 4px);
+  padding: 14px;
+  background: color-mix(in lab, var(--panel) 78%, transparent);
+  border: 1px solid color-mix(in lab, var(--muted) 32%, transparent);
+}
+.triton-block-title,
+.triton-program-title,
+.triton-summary-title {
+  margin: 0;
+  font-size: 0.95em;
+  font-weight: 700;
+  color: var(--subtle);
+}
+.triton-thread-grid { display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.triton-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in lab, var(--muted) 30%, transparent);
+  background: color-mix(in lab, var(--bg) 92%, transparent);
+  font-size: 12px;
+}
+.triton-thread--inactive { opacity: 0.6; }
+.triton-thread-title { font-weight: 600; color: var(--subtle); font-size: 0.85em; }
+.triton-thread-detail { font-family: var(--font-mono); color: var(--muted); }
+.triton-thread-op { font-family: var(--font-mono); color: var(--text); }
+.triton-vector-row { display: flex; flex-direction: column; gap: 8px; }
+.triton-vector-label { font-family: var(--font-mono); font-size: 0.85em; color: var(--muted); }
+.triton-program-note { font-size: 0.8em; color: var(--muted); font-style: italic; }
+.triton-summary { display: flex; flex-direction: column; gap: 8px; }
+.triton-list { margin: 0; padding-left: 18px; display: grid; gap: 4px; color: var(--text); }
+.triton-list li { margin: 0; font-size: 0.95em; }
+
+@media (max-width: 640px) {
+  .triton-thread-grid { grid-template-columns: 1fr; }
+  .triton { padding: 18px; }
+}
+
+/* Post engagement + comments */
+.post-engagement {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 12px 0 24px;
+}
+.like-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in lab, var(--accent) 35%, transparent);
+  background: color-mix(in lab, var(--accent) 20%, var(--panel));
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+.like-pill:hover:not(:disabled) { filter: brightness(1.05); transform: translateY(-1px); }
+.like-pill:disabled {
+  cursor: default;
+  opacity: 0.6;
+  transform: none;
+}
+.views-pill {
+  border: 1px solid color-mix(in lab, var(--muted) 25%, transparent);
+  background: color-mix(in lab, var(--panel) 60%, transparent);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.9em;
+  color: var(--muted);
+}
+.comments-block {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid color-mix(in lab, var(--muted) 25%, transparent);
+}
+.comments-title {
+  margin: 0 0 16px;
+  font-size: clamp(18px, 1.5vw + 0.6rem, 24px);
+  color: var(--subtle);
+}
+
+/* Generic diagram widgets */
+.diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border-radius: var(--radius);
+  background: color-mix(in lab, var(--panel) 70%, transparent);
+  border: 1px solid color-mix(in lab, var(--muted) 28%, transparent);
+  margin: 24px 0;
+}
+.diagram-title {
+  margin: 0;
+  font-size: clamp(18px, 1.4vw + 0.6rem, 24px);
+  color: var(--subtle);
+}
+.diagram-caption {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95em;
+}
+.diagram-footnote {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+.diagram--hello .diagram-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.diagram-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: calc(var(--radius) - 4px);
+  background: color-mix(in lab, var(--bg) 85%, transparent);
+  border: 1px solid color-mix(in lab, var(--muted) 24%, transparent);
+}
+.diagram-block-title {
+  font-weight: 600;
+  color: var(--subtle);
+}
+.diagram-threads {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.diagram-thread {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in lab, var(--muted) 30%, transparent);
+  background: color-mix(in lab, var(--panel) 80%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85em;
+}
+.diagram-thread-id {
+  font-family: var(--font-mono);
+  color: var(--link);
+}
+.diagram-thread-note {
+  color: var(--text);
+}
+
+.diagram--vector .diagram-layout {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  align-items: stretch;
+}
+.diagram-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.diagram-column-title {
+  font-weight: 600;
+  color: var(--subtle);
+}
+.diagram-card {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in lab, var(--muted) 24%, transparent);
+  background: color-mix(in lab, var(--bg) 88%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--text);
+}
+.diagram-card--kernel {
+  background: color-mix(in lab, var(--panel) 78%, transparent);
+}
+.diagram-card-heading {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.diagram-card-body {
+  color: var(--text);
+}
+.diagram-column--flow {
+  align-items: center;
+  justify-content: space-evenly;
+}
+.diagram-arrow {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px dashed color-mix(in lab, var(--muted) 30%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--muted);
+  text-align: center;
+  width: min(180px, 100%);
+  word-break: break-word;
+}
+.diagram-arrow--kernel {
+  border-style: solid;
+  background: color-mix(in lab, var(--accent) 18%, transparent);
+  color: var(--text);
+}
+.diagram-thread-matrix {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  align-items: center;
+}
+.diagram-thread-cell {
+  padding: 8px;
+  border-radius: 8px;
+  background: color-mix(in lab, var(--panel) 82%, transparent);
+  border: 1px solid color-mix(in lab, var(--muted) 24%, transparent);
+  font-family: var(--font-mono);
+  text-align: center;
+  font-size: 0.85em;
+  color: var(--text);
+}
+.diagram-thread-formula {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 0.85em;
+  color: var(--muted);
+}

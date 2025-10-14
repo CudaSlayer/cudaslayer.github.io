@@ -41,6 +41,26 @@
       })();
     </script>
 
+    <!-- Site-wide integrations (configure per README) -->
+    <script>
+      window.__BLOG_GISCUS = {
+        repo: '',          // e.g. 'user/discussions-repo'
+        repoId: '',         // from giscus.app setup
+        category: '',       // discussion category name
+        categoryId: '',     // discussion category ID
+        mapping: 'specific',
+        termStrategy: 'slug', // use post slug for discussion mapping
+        themeLight: 'light',
+        themeDark: 'dark_dimmed',
+        emitMetadata: '0',
+        inputPosition: 'top',
+        lang: 'en'
+      };
+      window.__BLOG_METRICS = {
+        baseUrl: '' // e.g. 'https://your-worker-subdomain.workers.dev'
+      };
+    </script>
+
     <!-- Tailwind CSS via CDN for responsive utilities -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>

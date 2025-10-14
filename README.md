@@ -53,3 +53,24 @@ python3 -m http.server -b 127.0.0.1 8080
 ```
 
 Then visit `http://127.0.0.1:8080`.
+
+## Integrations
+
+Both comments and engagement counters are optional; the UI hides itself when configuration is missing.
+
+### GitHub-powered comments (giscus)
+
+1. Follow <https://giscus.app> to generate repository, category, and ID values.
+2. Populate the `window.__BLOG_GISCUS` object in `index.html` with the values that giscus provides (`repo`, `repoId`, `category`, `categoryId`, optional custom themes).
+3. The SPA automatically mounts giscus at the end of every post and keeps the embedded theme in sync with the site toggle.
+
+### GitHub-backed likes & view counts
+
+1. Create (or choose) a GitHub repository to store metrics. Open an issue and add a comment whose body is `{ "slugs": {} }`. Note the numeric comment ID.
+2. Deploy the Cloudflare Worker in `workers/github-metrics.js` with `wrangler`. The worker expects these environment variables:
+   - `GITHUB_TOKEN` — fine-grained PAT with `issues:read` and `issues:write` on the repo above.
+   - `GITHUB_OWNER` / `GITHUB_REPO` — repository that holds the metrics comment.
+   - `GITHUB_COMMENT_ID` — ID of the comment created in step 1.
+3. Set the worker's public URL as `window.__BLOG_METRICS.baseUrl` in `index.html`.
+4. Each page view sends `POST /view`; clicking the like chip sends `POST /like`. Both endpoints update the JSON stored inside the GitHub comment, so values are permanent and versioned in GitHub. A lightweight `GET /metrics?slug=...` keeps the UI in sync.
+5. The client also stores a `localStorage` flag (`post:liked:slug`) to prevent accidental repeat likes from the same browser.

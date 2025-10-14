@@ -1,26 +1,23 @@
 [
   {
     "slug": "hello-world",
-    "title": "Hello, World — Why Another Blog?",
+    "title": "Hello, World \u2014 Why Another Blog?",
     "date": "2025-09-15",
-    "tags": ["meta", "intro"],
+    "tags": [
+      "meta",
+      "intro"
+    ],
     "summary": "A quick note on intent: deep learning notes, math, and physics.",
     "file": "posts/hello-world.md"
   },
   {
-    "slug": "matrix-basics",
-    "title": "Matrix Multiplication, Affine Maps, and Matrix Calculus (For Everyone)",
-    "date": "2025-09-15",
-    "tags": ["math", "linear-algebra", "calculus", "deep-learning"],
-    "summary": "A friendly but formal guide to matrix multiplication, affine transformations, and a short primer on matrix calculus.",
-    "file": "posts/matrix-basics.md"
-  },
-  {
-    "slug": "dl-math-foundations",
-    "title": "Deep Learning: Mathematical Foundations (A Gentle Start)",
-    "date": "2025-09-15",
-    "tags": ["deep-learning", "math", "foundations"],
-    "summary": "Vectors, linear models, loss, gradients, chain rule, backprop, and optimization — with a tiny diagram.",
-    "file": "posts/dl-math-foundations.md"
+    "slug": "cuda-day1",
+    "title": "CUDA Day 1",
+    "date": "2025-10-14",
+    "tags": [
+      "cuda"
+    ],
+    "summary": "First notes on CUDA fundamentals.",
+    "file": "posts/cuda-day1.md"
   }
 ]
