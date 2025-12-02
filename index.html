@@ -1,104 +1,1093 @@
-<!--
-  CudaSlayer — Minimal Blog
-  This single HTML file bootstraps the entire site. It pulls in:
-  - A monospace UI font (JetBrains Mono)
-  - A small CSS file with light/dark theme variables
-  - React + ReactDOM from a CDN (for UI)
-  - Marked (for parsing Markdown posts)
-  - highlight.js (for code syntax highlighting)
-  - KaTeX (for rendering LaTeX math)
-  The actual app logic lives in assets/app.js
--->
-<!doctype html> <!-- Standard HTML5 doctype to ensure modern rendering mode -->
-<html lang="en"> <!-- Page language for accessibility and search engines -->
-  <head>
-    <meta charset="utf-8" /> <!-- Use UTF-8 so all characters display correctly -->
-    <meta name="viewport" content="width=device-width, initial-scale=1" /> <!-- Make layout responsive on mobile -->
-    <title>CudaSlayer — Notes on DL, Math, Physics</title> <!-- Browser tab title -->
-    <meta name="description" content="Minimal technical blog on deep learning, heavy maths, and physics." /> <!-- Short site description -->
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sritanu Chakraborty</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap");
 
-    <!-- Performance: preconnect to CDNs we’ll load from -->
-    <link rel="preconnect" href="https://unpkg.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <!-- UI font: JetBrains Mono (used for both body and code) -->
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <!--
-      Before loading CSS, set the theme attribute on <html>.
-      This avoids a flash of wrong theme (FOUC) on first paint.
-    -->
-    <script>
-      (function(){
-        try{
-          var k='blog:theme'; // localStorage key where we store theme
-          var t=localStorage.getItem(k); // try to read previously chosen theme
-          // If no explicit theme, respect the OS color scheme
-          if(t!=='dark' && t!=='light') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', t); // apply the theme to <html>
-        }catch(e){}
-      })();
-    </script>
-
-    <!-- Site-wide integrations (configure per README) -->
-    <script>
-      window.__BLOG_GISCUS = {
-        repo: '',          // e.g. 'user/discussions-repo'
-        repoId: '',         // from giscus.app setup
-        category: '',       // discussion category name
-        categoryId: '',     // discussion category ID
-        mapping: 'specific',
-        termStrategy: 'slug', // use post slug for discussion mapping
-        themeLight: 'light',
-        themeDark: 'dark_dimmed',
-        emitMetadata: '0',
-        inputPosition: 'top',
-        lang: 'en'
-      };
-      window.__BLOG_METRICS = {
-        baseUrl: '' // e.g. 'https://your-worker-subdomain.workers.dev'
-      };
-    </script>
-
-    <!-- Tailwind CSS via CDN for responsive utilities -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['JetBrains Mono','ui-monospace','SFMono-Regular','Menlo','Monaco','Consolas','Liberation Mono','Courier New','monospace'],
-              mono: ['JetBrains Mono','ui-monospace','SFMono-Regular','Menlo','Monaco','Consolas','Liberation Mono','Courier New','monospace']
+            /* --- THEME VARIABLES --- */
+            :root {
+                /* Default (Dark/Terminal Mode) */
+                --bg-main: #050505;
+                --bg-card: #0a0a0a;
+                --text-main: #ffffff;
+                --text-muted: #9ca3af; /* gray-400 */
+                --accent: #00ff41; /* Matrix Green */
+                --accent-dim: rgba(0, 255, 65, 0.1);
+                --border: #1f2937; /* gray-800 */
+                --scanline-color: rgba(0, 255, 65, 0.02);
             }
-          }
-        }
-      };
-    </script>
-    <!-- Our site styles (colors, spacing, components) -->
-    <link rel="stylesheet" href="assets/styles.css" />
 
-    <!-- KaTeX stylesheet so math renders without layout shifting -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
-  </head>
-  <body>
-    <!-- React will render our app into this root element -->
-    <div id="root"></div>
+            /* Sepia / Sand Mode */
+            .theme-sepia {
+                --bg-main: #e6e2d3; /* Warm Sand */
+                --bg-card: #f0efe9; /* Lighter Sand */
+                --text-main: #292524; /* Stone-800 */
+                --text-muted: #57534e; /* Stone-500 */
+                --accent: #d97706; /* Amber-600 */
+                --accent-dim: rgba(217, 119, 6, 0.1);
+                --border: #a8a29e; /* Stone-400 */
+                --scanline-color: rgba(217, 119, 6, 0.03);
+            }
 
-    <!-- React runtime from CDN (UI library). React handles the UI as a tree of components. -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <!-- ReactDOM to connect React to the DOM -->
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <!-- Marked parses Markdown strings into HTML (we render posts with this). -->
-    <script src="https://unpkg.com/marked@12.0.2/marked.min.js" crossorigin></script>
-    <!-- highlight.js colors code blocks inside posts (if it loads successfully). -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+            body {
+                font-family: "JetBrains Mono", monospace;
+                background-color: var(--bg-main);
+                color: var(--text-main);
+                transition:
+                    background-color 0.3s ease,
+                    color 0.3s ease;
+            }
 
-    <!-- KaTeX core + auto-render add LaTeX math rendering (inline $..$ and block $$..$$). -->
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+            /* Utility classes */
+            .text-theme-main {
+                color: var(--text-main);
+            }
+            .text-theme-muted {
+                color: var(--text-muted);
+            }
+            .text-theme-accent {
+                color: var(--accent);
+            }
+            .bg-theme-card {
+                background-color: var(--bg-card);
+            }
+            .border-theme {
+                border-color: var(--border);
+            }
 
-    <!-- Our app code (routing, theme toggle, post loading) -->
-    <script type="module" src="assets/app.js"></script>
-  </body>
-  </html>
+            .cursor-blink {
+                animation: blink 1s infinite;
+            }
+
+            @keyframes blink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
+
+            .scanline {
+                width: 100%;
+                height: 100px;
+                z-index: 10;
+                background: linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0) 0%,
+                    var(--scanline-color) 50%,
+                    rgba(0, 0, 0, 0) 100%
+                );
+                opacity: 0.5;
+                position: absolute;
+                bottom: 100%;
+                animation: scanline 10s linear infinite;
+                pointer-events: none;
+            }
+
+            @keyframes scanline {
+                0% {
+                    bottom: 100%;
+                }
+                100% {
+                    bottom: -100%;
+                }
+            }
+
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+
+            .card-hover:hover {
+                border-color: var(--accent);
+                box-shadow: 0 0 20px var(--accent-dim);
+                transform: translateY(-2px);
+            }
+
+            .metric-pill {
+                background: var(--accent-dim);
+                color: var(--accent);
+                border: 1px solid var(--accent);
+            }
+        </style>
+    </head>
+    <body
+        class="antialiased overflow-x-hidden selection:bg-green-900 selection:text-white"
+    >
+        <div class="scanline fixed inset-0 h-screen pointer-events-none"></div>
+
+        <div
+            class="max-w-7xl mx-auto px-6 py-8 flex justify-between items-center border-b border-theme sticky top-0 z-50 backdrop-blur-sm bg-theme-main/90 transition-colors duration-300"
+        >
+            <div class="text-sm text-theme-muted hidden md:block">
+                founder@mi_algo_tech:~$
+                <span class="text-theme-accent font-bold"
+                    >./init_profile.sh</span
+                >
+            </div>
+            <div class="text-theme-accent font-bold md:hidden">
+                MI-ALGO TECH
+            </div>
+
+            <div class="flex items-center gap-6">
+                <button
+                    onclick="toggleTheme()"
+                    class="text-theme-muted hover:text-theme-accent transition-colors focus:outline-none text-lg"
+                >
+                    <i class="fas fa-sun hidden theme-icon-sun"></i>
+                    <i class="fas fa-moon theme-icon-moon"></i>
+                </button>
+
+                <a
+                    href="blog.html"
+                    class="text-xs border border-theme px-4 py-2 hover:bg-theme-card transition uppercase tracking-wider text-theme-accent font-bold"
+                >
+                    [ Blog ]
+                </a>
+
+                <a
+                    href="mailto:contact@mialgo.tech"
+                    target="_blank"
+                    class="text-xs border border-theme px-4 py-2 hover:bg-theme-card transition uppercase tracking-wider text-theme-accent font-bold"
+                >
+                    [ Email ]
+                </a>
+
+                <a
+                    href="https://www.upwork.com/freelancers/~01539630e4bad575a5"
+                    target="_blank"
+                    class="text-xs border border-theme px-4 py-2 hover:bg-theme-card transition uppercase tracking-wider text-theme-accent font-bold"
+                    >[ Upwork ]</a
+                >
+
+                <a
+                    href="https://x.com/CudaSlayer"
+                    target="_blank"
+                    class="text-xs border border-theme px-4 py-2 hover:bg-theme-card transition uppercase tracking-wider text-theme-accent font-bold"
+                    >[ X - @CudaSlayer ]</a
+                >
+            </div>
+        </div>
+
+        <main class="max-w-7xl mx-auto px-6 pt-20 pb-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h1
+                        class="text-5xl lg:text-7xl font-bold mb-6 text-theme-main leading-tight transition-colors duration-300"
+                    >
+                        Deploy SOTA <br />
+                        <span class="text-theme-accent">Not Just Code.</span>
+                    </h1>
+                    <p
+                        class="text-theme-muted text-lg mb-8 border-l-2 border-theme pl-4 transition-colors duration-300"
+                        style="border-color: var(--accent)"
+                    >
+                        Achieving upto
+                        <span class="text-theme-main font-bold"
+                            >300x speedups</span
+                        >
+                        in ML pipelines and SOTA scores in NLP. Specializing in
+                        High-Performance Distributed Deep Learning.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4 text-sm">
+                        <div
+                            class="flex items-center gap-2 bg-theme-card px-3 py-2 rounded border border-theme transition-colors duration-300"
+                        >
+                            <i class="fas fa-microchip text-theme-accent"></i>
+                            <span class="text-theme-muted">NVTabular</span>
+                        </div>
+                        <div
+                            class="flex items-center gap-2 bg-theme-card px-3 py-2 rounded border border-theme transition-colors duration-300"
+                        >
+                            <i
+                                class="fas fa-network-wired text-theme-accent"
+                            ></i>
+                            <span class="text-theme-muted">Horovod</span>
+                        </div>
+                        <div
+                            class="flex items-center gap-2 bg-theme-card px-3 py-2 rounded border border-theme transition-colors duration-300"
+                        >
+                            <i class="fas fa-layer-group text-theme-accent"></i>
+                            <span class="text-theme-muted">Transformers</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-[#0a0a0a] border border-theme p-6 rounded-lg shadow-2xl relative overflow-hidden transition-colors duration-300 group"
+                >
+                    <div
+                        class="absolute top-0 right-0 p-4 text-xs text-gray-600 font-mono"
+                    >
+                        optimizing_pipeline.py
+                    </div>
+                    <div class="flex gap-2 mb-4">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <pre
+                        class="text-xs md:text-sm text-gray-300 overflow-x-auto font-mono"
+                    >
+<span class="text-purple-400">import</span> horovod.torch <span class="text-purple-400">as</span> hvd
+<span class="text-purple-400">from</span> transformers <span class="text-purple-400">import</span> BertModel
+
+<span class="text-gray-500"># Initializing Distributed Training</span>
+hvd.init()
+torch.cuda.set_device(hvd.local_rank())
+
+<span class="text-purple-400">def</span> <span class="text-blue-400">optimize_throughput</span>(data_loader):
+    <span class="text-gray-500"># Reduced sampling time by 15x</span>
+    <span class="text-gray-500"># End-to-End speedup: 300x</span>
+    optimizer = hvd.DistributedOptimizer(
+        optimizer,
+        named_parameters=model.named_parameters()
+    )
+    <span class="text-theme-accent cursor-blink">|</span></pre>
+                </div>
+            </div>
+        </main>
+
+        <div
+            class="border-y border-theme bg-theme-card transition-colors duration-300"
+        >
+            <div
+                class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8"
+            >
+                <div>
+                    <div class="text-4xl font-bold text-theme-main mb-1">
+                        300x
+                    </div>
+                    <div
+                        class="text-xs text-theme-muted uppercase tracking-wider"
+                    >
+                        Pipeline Speedup
+                    </div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-theme-main mb-1">
+                        $2M+
+                    </div>
+                    <div
+                        class="text-xs text-theme-muted uppercase tracking-wider"
+                    >
+                        Client Cost Savings
+                    </div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-theme-main mb-1">
+                        SOTA
+                    </div>
+                    <div
+                        class="text-xs text-theme-muted uppercase tracking-wider"
+                    >
+                        Research Scores
+                    </div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-theme-main mb-1">
+                        98%
+                    </div>
+                    <div
+                        class="text-xs text-theme-muted uppercase tracking-wider"
+                    >
+                        Job Success
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="max-w-7xl mx-auto px-6 py-24">
+            <div class="flex items-end justify-between mb-12">
+                <h2
+                    class="text-2xl font-bold text-theme-main border-l-4 border-theme pl-4 transition-colors duration-300"
+                    style="border-color: var(--accent)"
+                >
+                    SELECTED RELEVANT PROJECTS
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div
+                    class="bg-theme-card border border-theme p-8 card-hover transition-colors duration-300 flex flex-col"
+                >
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl text-theme-main font-bold">
+                            Distributed ML DevOps
+                        </h3>
+                        <span
+                            class="metric-pill px-2 py-1 text-xs rounded font-bold"
+                            >PATENTED</span
+                        >
+                    </div>
+                    <p
+                        class="text-sm text-theme-muted mb-6 leading-relaxed flex-grow"
+                    >
+                        Expedited the workflow of a Bayesian deep learning
+                        prediction model handling >10TB of Big Data.
+                        <br /><br />
+                        <i class="fas fa-check text-theme-accent mr-2"></i>
+                        Improved sampling optimization run time by
+                        <strong class="text-theme-main">15x</strong>.
+                        <br />
+                        <i class="fas fa-check text-theme-accent mr-2"></i>
+                        Optimized end-to-end pipeline (preprocessing to
+                        evaluation) by
+                        <strong class="text-theme-main">300x</strong> using
+                        distributed systems and SQS queues.
+                        <br />
+                        <i class="fas fa-check text-theme-accent mr-2"></i>
+                        <strong class="text-theme-main">
+                            <a
+                                href="https://patents.justia.com/patent/12177503"
+                                target="_blank"
+                                class="text-theme-accent hover:underline"
+                                >View Patent
+                                <i
+                                    class="fas fa-external-link-alt text-[10px]"
+                                ></i>
+                            </a>
+                        </strong>
+                    </p>
+                    <div class="flex gap-2 flex-wrap mt-auto">
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >NVTabular</span
+                        >
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >Horovod</span
+                        >
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >AWS</span
+                        >
+                    </div>
+                </div>
+
+                <div
+                    class="bg-theme-card border border-theme p-8 card-hover transition-colors duration-300 flex flex-col"
+                >
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl text-theme-main font-bold">
+                            SOTA NLP Research
+                        </h3>
+                        <span
+                            class="metric-pill px-2 py-1 text-xs rounded font-bold"
+                            >PUBLISHED</span
+                        >
+                    </div>
+                    <p
+                        class="text-sm text-theme-muted mb-6 leading-relaxed flex-grow"
+                    >
+                        Created a MultiWord Extraction algorithm using
+                        transformers and achieved State-of-the-Art (SOTA) scores
+                        for semantic sentence similarity.
+                        <br /><br />
+                        <i class="fas fa-check text-theme-accent mr-2"></i>
+                        <a
+                            href="https://www.researchgate.net/publication/343162894_Identification_of_Multiword_Expressions_using_Transformers"
+                            target="_blank"
+                            class="text-theme-accent hover:underline"
+                            >Co-authored paper on ResearchGate
+                            <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                        <br />
+                        <i class="fas fa-check text-theme-accent mr-2"></i>
+                        Leveraged ELMO and Transformer models (BERT, ALBERT,
+                        RoBERTa).
+                    </p>
+                    <div class="flex gap-2 flex-wrap mt-auto">
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >Transformers</span
+                        >
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >Research</span
+                        >
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >PyTorch</span
+                        >
+                    </div>
+                </div>
+
+                <div
+                    class="bg-theme-card border border-theme p-8 card-hover transition-colors duration-300 flex flex-col"
+                >
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl text-theme-main font-bold">
+                            Actuarial Deep Learning
+                        </h3>
+                        <span
+                            class="metric-pill px-2 py-1 text-xs rounded font-bold"
+                            >FINTECH</span
+                        >
+                    </div>
+                    <p
+                        class="text-sm text-theme-muted mb-6 leading-relaxed flex-grow"
+                    >
+                        Built critical deep learning tools for actuarial use
+                        cases focusing on zero-skewed data and complex
+                        probability distributions.
+                        <br /><br />
+                        <i class="fas fa-check text-theme-accent mr-2"></i>
+                        Implemented Mixture Density Networks (MDN).
+                        <br />
+                        <i class="fas fa-check text-theme-accent mr-2"></i>
+                        Utilized Hyperopt for Bayesian hyperparameter tuning.
+                    </p>
+                    <div class="flex gap-2 flex-wrap mt-auto">
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >MDN</span
+                        >
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >Hyperopt</span
+                        >
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >Tensorboard</span
+                        >
+                    </div>
+                </div>
+
+                <div
+                    class="bg-theme-card border border-theme p-8 card-hover transition-colors duration-300 flex flex-col"
+                >
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl text-theme-main font-bold">
+                            LLM Finetuning
+                        </h3>
+                        <span
+                            class="metric-pill px-2 py-1 text-xs rounded font-bold"
+                            >GEN-AI</span
+                        >
+                    </div>
+                    <p
+                        class="text-sm text-theme-muted mb-6 leading-relaxed flex-grow"
+                    >
+                        Specialized work in finetuning large causal language
+                        models for specific domain tasks.
+                        <br /><br />
+                        <i class="fas fa-check text-theme-accent mr-2"></i> Cost
+                        savings in excess of $1M through efficient model
+                        deployment.
+                        <br />
+                        <i class="fas fa-check text-theme-accent mr-2"></i>
+                        Operational efficiency increased by 40%.
+                    </p>
+                    <div class="flex gap-2 flex-wrap mt-auto">
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >LLM</span
+                        >
+                        <span
+                            class="text-xs border border-theme px-2 py-1 text-theme-muted"
+                            >Optimization</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-6 pb-24">
+            <h2
+                class="text-2xl font-bold text-theme-main mb-12 border-l-4 border-theme pl-4 transition-colors duration-300"
+                style="border-color: var(--accent)"
+            >
+                ACADEMIC BACKGROUND
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div
+                    class="bg-theme-card border border-theme p-8 card-hover transition-colors duration-300 group"
+                >
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <div
+                                class="text-xs text-theme-accent font-bold uppercase tracking-widest mb-2"
+                            >
+                                2015 — 2017
+                            </div>
+                            <h3 class="text-xl text-theme-main font-bold mb-1">
+                                Moscow Institute of Physics and Technology
+                            </h3>
+                            <p class="text-theme-muted text-sm italic">
+                                Master of Science (M.S.)
+                            </p>
+                        </div>
+                        <i
+                            class="fas fa-university text-3xl text-theme-muted opacity-20 group-hover:opacity-50 group-hover:text-theme-accent transition-all"
+                        ></i>
+                    </div>
+
+                    <div class="mt-4 border-t border-theme pt-4">
+                        <div
+                            class="text-[10px] font-bold text-theme-muted uppercase mb-1"
+                        >
+                            FOCUS
+                        </div>
+                        <p class="text-sm text-theme-main italic font-bold">
+                            Network Theory, Graph Theory and Combinatorics
+                        </p>
+                    </div>
+
+                    <div class="mt-4">
+                        <div
+                            class="text-[10px] font-bold text-theme-muted uppercase mb-3"
+                        >
+                            Critical Modules
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Advanced Graph Theory</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Random Graphs I & II</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Discrete Structures</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Extremal Combinatorics</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Game Theory</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Linear Algebra</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Theory of Probability</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Complex Networks</span
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-theme-card border border-theme p-8 card-hover transition-colors duration-300 group"
+                >
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <div
+                                class="text-xs text-theme-accent font-bold uppercase tracking-widest mb-2"
+                            >
+                                2008 — 2012
+                            </div>
+                            <h3 class="text-xl text-theme-main font-bold mb-1">
+                                West Bengal University of Technology
+                            </h3>
+                            <p class="text-theme-muted text-sm italic">
+                                Bachelor of Technology (B.Tech.)
+                            </p>
+                        </div>
+                        <i
+                            class="fas fa-graduation-cap text-3xl text-theme-muted opacity-20 group-hover:opacity-50 group-hover:text-theme-accent transition-all"
+                        ></i>
+                    </div>
+
+                    <div class="mt-4 border-t border-theme pt-4">
+                        <div
+                            class="text-[10px] font-bold text-theme-muted uppercase mb-1"
+                        >
+                            Focus
+                        </div>
+                        <p class="text-sm text-theme-main italic font-bold">
+                            Electronics and Communication Engineering
+                        </p>
+                    </div>
+
+                    <div class="mt-4">
+                        <div
+                            class="text-[10px] font-bold text-theme-muted uppercase mb-3"
+                        >
+                            Core Modules
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Data Structure & Algorithms</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Numerical Methods</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Digital Signal Processing</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Computer Architecture</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >VLSI Circuits</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Coding & Information Theory</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Advanced Engg Mathematics</span
+                            >
+                            <span
+                                class="text-xs border border-theme px-2 py-1 text-theme-muted hover:text-theme-accent transition-colors"
+                                >Software Engineering</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-7xl mx-auto px-6 pb-24">
+            <h2
+                class="text-2xl font-bold text-theme-main mb-12 border-l-4 border-theme pl-4 transition-colors duration-300"
+                style="border-color: var(--accent)"
+            >
+                RELEVANT SEELCTED CLIENT FEEDBACK
+            </h2>
+
+            <div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Feb 2022 — Aug 2022 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "Sritanu attitude was very committed... coming in to a
+                        team with very advanced machine learning know how.
+                        <br /><br />
+                        He improved the run time of the entire end-to-end
+                        pipeline by at least
+                        <span class="text-theme-accent font-bold">300X</span>,
+                        by transforming a sequential modelling approach to a
+                        distributed system... I would warmly recommend Sritanu."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            ML DevOps Engineer
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Dec 2018 — Jan 2019 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "In my
+                        <strong class="text-theme-main"
+                            >6+ years of working at Microsoft</strong
+                        >
+                        I've worked with various Data Scientists and Technical
+                        fellows who are really above the industry skill bar.
+                        <br /><br />
+                        I have no doubts in placing Sritanu in the category of
+                        smart, motivated and skilled developer set that is
+                        <span class="text-theme-accent font-bold"
+                            >way above the average industry AI developer</span
+                        >. He researched upcoming technology and instantly
+                        course corrected me where I was wrong."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            Deep Learning CV Expert
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Jul 2019 — Jul 2019 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "Complicated computer vision task detecting UI elements
+                        in different states... Sritanu was selected as a high
+                        quality professional.
+                        <br /><br />
+                        1. Great budget estimation. <br />
+                        2. Completed on deadline. <br />
+                        3. Prepared our training infrastructure. <br />
+                        4. Explained basics so we can run it indoors. <br />
+                        He still makes light consulting after the work is
+                        completed."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            Tensorflow Android Expert
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Nov 2019 — May 2022 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "His research skills are insanely strong, and the
+                        materials he worked on have been jointly published with
+                        us in ResearchGate.
+                        <br /><br />
+                        Achieved
+                        <span class="text-theme-accent font-bold"
+                            >SOTA score</span
+                        >
+                        for Multiword Expressions."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            NLP Researcher
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Mar 2019 — Nov 2019 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "Sritanu is absolutely brilliant. Seriously. And a joy
+                        to work with. He pushed us in ways we would not have
+                        thought to go - and without him, we would not have
+                        achieved success."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            Algorithm Specialist
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Jan 2021 — Mar 2021 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "Sritanu helped us with building some critical deep
+                        learning tools that leverage Horovod, Tensorboard,
+                        Hyperopt... He is an incredibly hard working and
+                        collaborative person."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            Data Scientist
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Apr 2019 — May 2019 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "Sritanu is everything you look for in a freelancer. He
+                        is communicative, honest, and technically excellent.
+                        Completed work to a high standard."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            CV Engineer
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Aug 2019 — Nov 2019 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "Our team greatly enjoyed working with Sritanu. He is
+                        very knowledgeable and has an excellent set of skills...
+                        meaningful collaborator... always a very effective
+                        communicator."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            Python Expert
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Dec 2019 — Dec 2019 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "Sritanu is a great Professional with a capital letter
+                        P. He knows everything about data science, I am willing
+                        to work with him in our next project."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            ML Consultant
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Nov 2022 — Nov 2022 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "He was so honest with me I appreciate his feedback and
+                        expertise. Will pursue working with him in future.."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            LLM Client
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="break-inside-avoid bg-theme-card border border-theme p-6 rounded relative group hover:border-theme-accent transition-colors duration-300"
+                >
+                    <div
+                        class="text-xs text-theme-accent opacity-70 font-mono mb-3"
+                    >
+                        [ Feb 2020 — Apr 2020 ]
+                    </div>
+                    <i
+                        class="fas fa-quote-left text-2xl text-theme-accent opacity-50 mb-4"
+                    ></i>
+                    <p
+                        class="text-sm text-theme-muted italic mb-4 leading-relaxed"
+                    >
+                        "Completed multiple requests for our team, all on time,
+                        on budget, and left us happy each time... We are
+                        extremely grateful for your help Sritanu!"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-theme-accent flex items-center justify-center text-black font-bold text-xs"
+                        >
+                            5.0
+                        </div>
+                        <div class="text-xs font-bold text-theme-main">
+                            ML Developer
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer
+            class="border-t border-theme mt-12 bg-theme-card transition-colors duration-300"
+        >
+            <div
+                class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center"
+            >
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-theme-main font-bold text-xl">
+                        MI-ALGO TECH
+                    </h3>
+                    <p class="text-theme-muted text-sm">
+                        Research-Grade AI Engineering.
+                    </p>
+                </div>
+                <div class="flex gap-6">
+                    <a
+                        href="mailto:sritanu25@gmail.com"
+                        class="text-theme-muted hover:text-theme-main transition"
+                        >Email</a
+                    >
+                    <a
+                        href="https://www.upwork.com/freelancers/~01539630e4bad575a5"
+                        class="text-theme-accent hover:text-opacity-80 transition font-bold"
+                        >Upwork Profile</a
+                    >
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            function toggleTheme() {
+                const body = document.body;
+                const sunIcon = document.querySelector(".theme-icon-sun");
+                const moonIcon = document.querySelector(".theme-icon-moon");
+
+                body.classList.toggle("theme-sepia");
+
+                if (body.classList.contains("theme-sepia")) {
+                    sunIcon.classList.remove("hidden");
+                    moonIcon.classList.add("hidden");
+                    localStorage.setItem("theme", "sepia");
+                } else {
+                    sunIcon.classList.add("hidden");
+                    moonIcon.classList.remove("hidden");
+                    localStorage.setItem("theme", "dark");
+                }
+            }
+
+            // Check local storage on load
+            if (localStorage.getItem("theme") === "sepia") {
+                toggleTheme();
+            }
+        </script>
+    </body>
+</html>
