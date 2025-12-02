@@ -4,11 +4,28 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Sritanu Chakraborty</title>
+
+        <!-- Cloudflare Web Analytics -->
+         <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "bb1e2d862dba4b089166e3e51f525aa2"}'></script>
+         <!-- End Cloudflare Web Analytics -->
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-SFJHYSHXR6"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-SFJHYSHXR6');
+        </script>
+
         <script src="https://cdn.tailwindcss.com"></script>
         <link
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
             rel="stylesheet"
         />
+
+        <!-- Cookie Consent Management -->
+        <script src="assets/cookie-consent.js"></script>
         <style>
             @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap");
 
@@ -1066,6 +1083,47 @@ torch.cuda.set_device(hvd.local_rank())
         </footer>
 
         <script>
+            // Enhanced analytics tracking
+            function trackEvent(eventType, element, metadata = {}) {
+                // Track to Google Analytics
+                if (typeof gtag === 'function') {
+                    gtag('event', eventType, {
+                        'event_category': 'User Interaction',
+                        'event_label': element,
+                        'custom_parameter_1': 'portfolio',
+                        ...metadata
+                    });
+                }
+
+                // Track to custom metrics worker
+                const METRICS_BASE_URL = 'https://your-worker-subdomain.workers.dev';
+                fetch(`${METRICS_BASE_URL}/event`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        eventType,
+                        page: 'portfolio',
+                        element,
+                        timestamp: new Date().toISOString(),
+                        metadata
+                    })
+                }).catch(() => {}); // Silently fail
+            }
+
+            // Track homepage visit
+            function trackHomepageVisit() {
+                const METRICS_BASE_URL = 'https://your-worker-subdomain.workers.dev';
+                fetch(`${METRICS_BASE_URL}/homepage-visit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userAgent: navigator.userAgent,
+                        referrer: document.referrer,
+                        timestamp: new Date().toISOString()
+                    })
+                }).catch(() => {}); // Silently fail
+            }
+
             function toggleTheme() {
                 const body = document.body;
                 const sunIcon = document.querySelector(".theme-icon-sun");
@@ -1077,12 +1135,60 @@ torch.cuda.set_device(hvd.local_rank())
                     sunIcon.classList.remove("hidden");
                     moonIcon.classList.add("hidden");
                     localStorage.setItem("theme", "sepia");
+                    trackEvent('theme_change', 'sepia_theme');
                 } else {
                     sunIcon.classList.add("hidden");
                     moonIcon.classList.remove("hidden");
                     localStorage.setItem("theme", "dark");
+                    trackEvent('theme_change', 'dark_theme');
                 }
             }
+
+            // Track link clicks
+            function trackLinkClick(event, linkType) {
+                const href = event.target.href;
+                trackEvent('link_click', linkType, {
+                    destination: href,
+                    text: event.target.textContent.trim()
+                });
+            }
+
+            // Initialize tracking
+            document.addEventListener('DOMContentLoaded', function() {
+                // Track homepage visit
+                trackHomepageVisit();
+
+                // Track all external links
+                document.querySelectorAll('a[target="_blank"]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        let linkType = 'external_link';
+                        if (e.target.href.includes('upwork.com')) linkType = 'upwork_profile';
+                        else if (e.target.href.includes('twitter.com') || e.target.href.includes('x.com')) linkType = 'twitter_profile';
+                        else if (e.target.href.includes('mailto:')) linkType = 'email_contact';
+                        else if (e.target.href.includes('patents.justia.com')) linkType = 'patent_link';
+                        else if (e.target.href.includes('researchgate.net')) linkType = 'researchgate_profile';
+
+                        trackLinkClick(e, linkType);
+                    });
+                });
+
+                // Track scroll depth
+                let maxScroll = 0;
+                window.addEventListener('scroll', () => {
+                    const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+                    if (scrollPercent > maxScroll && scrollPercent % 25 === 0) {
+                        maxScroll = scrollPercent;
+                        trackEvent('scroll_depth', `scroll_${scrollPercent}`, { percentage: scrollPercent });
+                    }
+                });
+
+                // Track time on page
+                const startTime = Date.now();
+                window.addEventListener('beforeunload', () => {
+                    const timeSpent = Math.round((Date.now() - startTime) / 1000);
+                    trackEvent('page_unload', 'time_on_page', { duration_seconds: timeSpent });
+                });
+            });
 
             // Check local storage on load
             if (localStorage.getItem("theme") === "sepia") {

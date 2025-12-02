@@ -17,7 +17,22 @@
     <title>CudaSlayer — Notes on DL, Math, Physics</title> <!-- Browser tab title -->
     <meta name="description" content="Minimal technical blog on deep learning, heavy maths, and physics." /> <!-- Short site description -->
 
-    <!-- Performance: preconnect to CDNs we’ll load from -->
+
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "bb1e2d862dba4b089166e3e51f525aa2"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SFJHYSHXR6"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-SFJHYSHXR6');
+    </script>
+
+    <!-- Performance: preconnect to CDNs we'll load from -->
     <link rel="preconnect" href="https://unpkg.com" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -97,6 +112,9 @@
     <!-- KaTeX core + auto-render add LaTeX math rendering (inline $..$ and block $$..$$). -->
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Cookie Consent Management -->
+    <script src="assets/cookie-consent.js"></script>
 
     <!-- Our app code (routing, theme toggle, post loading) -->
     <script type="module" src="assets/app.js"></script>

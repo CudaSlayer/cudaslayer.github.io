@@ -13,6 +13,89 @@ export default {
       return json({ error: 'Worker is missing GitHub configuration.' }, 500);
     }
 
+    // Track homepage visits
+    if (request.method === 'POST' && url.pathname === '/homepage-visit') {
+      const { userAgent, referrer, timestamp } = await parseBody(request);
+      const store = await readStore(env);
+      const homepageKey = 'homepage';
+
+      if (!store.slugs[homepageKey]) {
+        store.slugs[homepageKey] = { views: 0, visits: [], lastVisit: null };
+      }
+
+      store.slugs[homepageKey].views = (store.slugs[homepageKey].views || 0) + 1;
+      store.slugs[homepageKey].visits.push({
+        timestamp: timestamp || new Date().toISOString(),
+        userAgent: userAgent || 'unknown',
+        referrer: referrer || 'direct'
+      });
+      store.slugs[homepageKey].lastVisit = timestamp || new Date().toISOString();
+
+      // Keep only last 100 visits to avoid storage bloat
+      if (store.slugs[homepageKey].visits.length > 100) {
+        store.slugs[homepageKey].visits = store.slugs[homepageKey].visits.slice(-100);
+      }
+
+      await persistStore(env, store);
+      return json({ views: store.slugs[homepageKey].views }, 200);
+    }
+
+    // Track custom events
+    if (request.method === 'POST' && url.pathname === '/event') {
+      const { eventType, page, element, timestamp, metadata } = await parseBody(request);
+      const store = await readStore(env);
+      const eventsKey = 'events';
+
+      if (!store.slugs[eventsKey]) {
+        store.slugs[eventsKey] = [];
+      }
+
+      store.slugs[eventsKey].push({
+        eventType,
+        page: page || 'unknown',
+        element: element || 'unknown',
+        timestamp: timestamp || new Date().toISOString(),
+        metadata: metadata || {}
+      });
+
+      // Keep only last 500 events
+      if (store.slugs[eventsKey].length > 500) {
+        store.slugs[eventsKey] = store.slugs[eventsKey].slice(-500);
+      }
+
+      await persistStore(env, store);
+      return json({ success: true }, 200);
+    }
+
+    // Get analytics summary
+    if (request.method === 'GET' && url.pathname === '/analytics-summary') {
+      const store = await readStore(env);
+      const homepage = store.slugs['homepage'] || { views: 0, visits: [] };
+      const posts = Object.keys(store.slugs).filter(key => key !== 'homepage' && key !== 'events');
+      const totalPostViews = posts.reduce((sum, slug) => sum + (store.slugs[slug]?.views || 0), 0);
+      const totalEvents = store.slugs['events']?.length || 0;
+
+      return json({
+        homepage: {
+          totalViews: homepage.views,
+          lastVisit: homepage.lastVisit,
+          recentVisits: homepage.visits?.slice(-10) || []
+        },
+        blog: {
+          totalPostViews,
+          postCount: posts.length,
+          topPosts: posts
+            .map(slug => ({ slug, views: store.slugs[slug]?.views || 0 }))
+            .sort((a, b) => b.views - a.views)
+            .slice(0, 5)
+        },
+        events: {
+          totalEvents,
+          recentEvents: store.slugs['events']?.slice(-20) || []
+        }
+      }, 200);
+    }
+
     try {
       if (request.method === 'GET' && url.pathname === '/metrics') {
         const slug = url.searchParams.get('slug');
